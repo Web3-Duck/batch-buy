@@ -1,23 +1,10 @@
 //  bsc测试网 环境
-const Web3 = require("web3");
 const Tx = require("ethereumjs-tx");
 const ROUTER_ABI = require("./abis/router.json");
 const PAIR_ABI = require("./abis/pair.json");
-const chainId = 97;
-var web3 = new Web3();
-web3.setProvider(new Web3.providers.HttpProvider("http://54.215.124.49:8575"));
-const pancakeRouter = "0x9Ac64Cc6e4415144C455BD8E4837Fea55603e5c3"; //pancakeRouter
-const privateKeyList = require("./privateKeys.json");
-const USDT = {
-  contract: "0x7ef95a0FEE0Dd31b22626fA2e10Ee6A223F8a684",
-  decimal: 18,
-  symbol: "USDT",
-};
-const BUSD = {
-  contract: "0x78867BbEeF44f2326bF8DDd1941a4439382EF2A7",
-  decimal: 18,
-  symbol: "BUSD",
-};
+const { parseAmount } = require("./format");
+const { defaultChainId, addresses, web3, privateKeyList } = require("./config");
+const pancakeRouter = addresses.router; //pancakeRouter
 
 async function swapExactTokensForTokens(
   amountIn,
@@ -43,7 +30,7 @@ async function swapExactTokensForTokens(
     nonce: nonce,
     gasPrice: 5100000000,
     gasLimit: 300000,
-    chainId: chainId,
+    chainId: defaultChainId,
     value: 0,
     data: code,
   };
@@ -60,23 +47,20 @@ async function swapExactTokensForTokens(
     });
 }
 
-// 将账号剩余USDT余额 买BUSD币
-const buyTokenNormal = () => {
-  const inToken = USDT;
-  const outToken = BUSD;
-  const path = [inToken.contract, outToken.contract];
+// 用busd 买usdt
+const buyToken = async () => {
+  const inToken = addresses.busd;
+  const outToken = addresses.usdt;
+  const path = [inToken, outToken];
   const tokenContract = new web3.eth.Contract(PAIR_ABI, path[0]);
+  const decimal = await tokenContract.methods.decimals().call();
+  const _amount = "0.1"; //花费的数量
+  const amount = parseAmount(_amount, decimal); //
   for (let i = 0; i < privateKeyList.length; i++) {
     const fromAddr = privateKeyList[i].account;
     const privateKey = Buffer.from(privateKeyList[i].privateKey, "hex");
-    tokenContract.methods
-      .balanceOf(fromAddr)
-      .call()
-      .then((balance) => {
-        swapExactTokensForTokens(balance, 0, path, fromAddr, privateKey);
-      });
+    swapExactTokensForTokens(amount, 0, path, fromAddr, privateKey);
   }
 };
 
-// 将账号剩余USDT余额 买BUSD币
-buyTokenNormal();
+buyToken();

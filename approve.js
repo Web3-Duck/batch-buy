@@ -1,17 +1,9 @@
-const Web3 = require("web3");
 const Tx = require("ethereumjs-tx");
 const PAIR_ABI = require("./abis/pair.json");
 const { MaxUint256 } = require("@ethersproject/constants");
-const chainId = 97; //bsc测试网
-var web3 = new Web3();
-web3.setProvider(new Web3.providers.HttpProvider("http://54.215.124.49:8575"));
-const pancakeRouter = "0x9Ac64Cc6e4415144C455BD8E4837Fea55603e5c3"; //pancakeRouter
-const privateKeyList = require("./privateKeys.json");
-const USDT = {
-  contract: "0x7ef95a0FEE0Dd31b22626fA2e10Ee6A223F8a684",
-  decimal: 18,
-  symbol: "USDT",
-};
+const { defaultChainId, web3, privateKeyList, addresses } = require("./config");
+
+const pancakeRouter = addresses.router; //pancakeRouter
 
 async function approve(token, fromAddr, privateKey) {
   return new Promise(async (resolve, reject) => {
@@ -27,7 +19,7 @@ async function approve(token, fromAddr, privateKey) {
         nonce: nonce,
         gasPrice: 5100000000,
         gasLimit: 300000,
-        chainId: chainId,
+        chainId: defaultChainId,
         value: 0,
         data: approveCode,
       };
@@ -58,4 +50,4 @@ const app = (token) => {
   }
 };
 
-app(USDT.contract);
+app(addresses.busd);
