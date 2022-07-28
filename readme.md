@@ -1,6 +1,8 @@
 多账号批量购买代币
 
-本项目仅支持 erc20token 购买 erc20token
+本项目支持 eth 买 token
+token 买 token
+token 买 eth
 
 ## 使用
 
