@@ -174,4 +174,6 @@ const tokenBuyEth = async () => {
     swapExactTokensForETH(amount, 0, path, fromAddr, privateKey);
   }
 };
-tokenBuyEth();
+tokenBuyToken();
+// ethBuyToken();
+// tokenBuyEth();

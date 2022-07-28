@@ -26,7 +26,8 @@ npm -v
 4. 向 1000 个账号转账 适量的 usdt
 5. 将要使用的账号导入 privateKeys.json
 6. 修改 approve 文件中的 token 信息，填入要授权的代币，然后命令行调用 node ./approve.js ,
-7. 修改 index 文件中 path 路径, 然后命令行调用 node ./index.js
+7. index文件中总共有三个函数，tokenBuyToken，ethBuyToken tokenBuyEth,请选择一个调用
+7. 修改 index 文件中 要调用函数的 path 路径, 然后命令行调用 node ./index.js
 ```
 
 可使用批量转账工具向小号转账 https://www.ducks.life/
