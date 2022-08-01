@@ -127,6 +127,17 @@ async function swapExactTokensForETH(
     });
 }
 
+const getBalance = async () => {
+  const inToken = addresses.usdt;
+  const tokenContract = new web3.eth.Contract(PAIR_ABI, inToken);
+  for (let i = 0; i < privateKeyList.length; i++) {
+    const fromAddr = privateKeyList[i].account;
+    const balance = await tokenContract.methods.balanceOf(fromAddr).call();
+
+    console.log(balance, "balance");
+  }
+};
+
 // 用busd 买usdt
 const tokenBuyToken = async () => {
   const inToken = addresses.busd;
@@ -150,7 +161,7 @@ const ethBuyToken = async () => {
   const path = [inToken, outToken];
   const tokenContract = new web3.eth.Contract(PAIR_ABI, path[0]);
   const decimal = await tokenContract.methods.decimals().call();
-  const _amount = "0.1"; //花费的数量
+  const _amount = "100"; //花费的数量
   const amount = parseAmount(_amount, decimal); //
   for (let i = 0; i < privateKeyList.length; i++) {
     const fromAddr = privateKeyList[i].account;
@@ -174,6 +185,11 @@ const tokenBuyEth = async () => {
     swapExactTokensForETH(amount, 0, path, fromAddr, privateKey);
   }
 };
-tokenBuyToken();
+// getBalance()
+// tokenBuyToken();
 // ethBuyToken();
 // tokenBuyEth();
+
+
+
+
